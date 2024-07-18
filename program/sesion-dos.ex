@@ -1,12 +1,14 @@
-defmodule AreaCalculator do
-  def areaCuadrado(b, a), do: b * a
-
-
-  def areaCirculo(r) do
-    3.1416 * r * r
-  end
-
-  def esNumeroPar?(n) do
-    rem(n, 2) == 0
+defmodule Playground do
+  calcular = fn
+    :circulo ->
+      IO.puts("La figura es un circulo")
+    :cuadrado ->
+      IO.puts("La figura es un cuadrado")
+    :triangulo ->
+      IO.puts("La figura es un triangulo")
+    :diamante ->
+      IO.puts("La figura es un dimante")
+    figura ->
+      {:error, figura}
   end
 end
