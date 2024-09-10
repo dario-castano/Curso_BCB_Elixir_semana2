@@ -1,20 +1,74 @@
 defmodule Library do
+  @moduledoc """
+  A module for managing a library system with books and users.
+  """
+
   defmodule Book do
+    @moduledoc """
+    A struct representing a book in the library.
+    """
     defstruct title: "", author: "", isbn: "", available: true
   end
 
   defmodule User do
+    @moduledoc """
+    A struct representing a user of the library.
+    """
     defstruct name: "", id: "", borrowed_books: []
   end
 
+  @doc """
+  Adds a book to the library.
+
+  ## Parameters
+  - library: The current list of books in the library.
+  - book: The book struct to add.
+
+  ## Examples
+
+      iex> library = []
+      iex> book = %Library.Book{title: "Elixir in Action", author: "Saša Jurić", isbn: "1234567890"}
+      iex> Library.add_book(library, book)
+      [%Library.Book{title: "Elixir in Action", author: "Saša Jurić", isbn: "1234567890", available: true}]
+  """
   def add_book(library, %Book{} = book) do
     library ++ [book]
   end
 
+  @doc """
+  Adds a user to the library system.
+
+  ## Parameters
+  - users: The current list of users.
+  - user: The user struct to add.
+
+  ## Examples
+
+      iex> users = []
+      iex> user = %Library.User{name: "Alice", id: "1"}
+      iex> Library.add_user(users, user)
+      [%Library.User{name: "Alice", id: "1", borrowed_books: []}]
+  """
   def add_user(users, %User{} = user) do
     users ++ [user]
   end
 
+  @doc """
+  Allows a user to borrow a book from the library.
+
+  ## Parameters
+  - library: The current list of books in the library.
+  - users: The current list of users.
+  - user_id: The ID of the user borrowing the book.
+  - isbn: The ISBN of the book to borrow.
+
+  ## Examples
+
+      iex> library = [%Library.Book{title: "Elixir in Action", author: "Saša Jurić", isbn: "1234567890", available: true}]
+      iex> users = [%Library.User{name: "Alice", id: "1", borrowed_books: []}]
+      iex> Library.borrow_book(library, users, "1", "1234567890")
+      {:ok, [%Library.Book{title: "Elixir in Action", author: "Saša Jurić", isbn: "1234567890", available: false}], [%Library.User{name: "Alice", id: "1", borrowed_books: [%Library.Book{title: "Elixir in Action", author: "Saša Jurić", isbn: "1234567890", available: false}]}]}
+  """
   def borrow_book(library, users, user_id, isbn) do
     user = Enum.find(users, &(&1.id == user_id))
     book = Enum.find(library, &(&1.isbn == isbn && &1.available))
@@ -40,6 +94,22 @@ defmodule Library do
     end
   end
 
+  @doc """
+  Allows a user to return a borrowed book to the library.
+
+  ## Parameters
+  - library: The current list of books in the library.
+  - users: The current list of users.
+  - user_id: The ID of the user returning the book.
+  - isbn: The ISBN of the book to return.
+
+  ## Examples
+
+      iex> library = [%Library.Book{title: "Elixir in Action", author: "Saša Jurić", isbn: "1234567890", available: false}]
+      iex> users = [%Library.User{name: "Alice", id: "1", borrowed_books: [%Library.Book{title: "Elixir in Action", author: "Saša Jurić", isbn: "1234567890", available: false}]}]
+      iex> Library.return_book(library, users, "1", "1234567890")
+      {:ok, [%Library.Book{title: "Elixir in Action", author: "Saša Jurić", isbn: "1234567890", available: true}], [%Library.User{name: "Alice", id: "1", borrowed_books: []}]}
+  """
   def return_book(library, users, user_id, isbn) do
     user = Enum.find(users, &(&1.id == user_id))
     book = Enum.find(user.borrowed_books, &(&1.isbn == isbn))
@@ -65,14 +135,51 @@ defmodule Library do
     end
   end
 
+  @doc """
+  Lists all books in the library.
+
+  ## Parameters
+  - library: The current list of books in the library.
+
+  ## Examples
+
+      iex> library = [%Library.Book{title: "Elixir in Action", author: "Saša Jurić", isbn: "1234567890"}]
+      iex> Library.list_books(library)
+      [%Library.Book{title: "Elixir in Action", author: "Saša Jurić", isbn: "1234567890"}]
+  """
   def list_books(library) do
     library
   end
 
+  @doc """
+  Lists all users in the library system.
+
+  ## Parameters
+  - users: The current list of users.
+
+  ## Examples
+
+      iex> users = [%Library.User{name: "Alice", id: "1"}]
+      iex> Library.list_users(users)
+      [%Library.User{name: "Alice", id: "1"}]
+  """
   def list_users(users) do
     users
   end
 
+  @doc """
+  Lists all books borrowed by a specific user.
+
+  ## Parameters
+  - users: The current list of users.
+  - user_id: The ID of the user whose borrowed books are to be listed.
+
+  ## Examples
+
+      iex> users = [%Library.User{name: "Alice", id: "1", borrowed_books: [%Library.Book{title: "Elixir in Action", author: "Saša Jurić", isbn: "1234567890"}]}]
+      iex> Library.books_borrowed_by_user(users, "1")
+      [%Library.Book{title: "Elixir in Action", author: "Saša Jurić", isbn: "1234567890"}]
+  """
   def books_borrowed_by_user(users, user_id) do
     user = Enum.find(users, &(&1.id == user_id))
     if user, do: user.borrowed_books, else: []
