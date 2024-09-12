@@ -11,6 +11,6 @@ defmodule Geometry do
     radio * radio * 3.1416
   end
   def calcularArea(parametro) do
-
+    IO.puts("No se puede calcular el area de #{parametro}")
   end
 end
