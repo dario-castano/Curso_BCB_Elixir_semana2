@@ -54,6 +54,23 @@ defmodule Library do
   end
 
   @doc """
+  Removes an user to the library system.
+
+  ## Parameters
+  - users: The current list of users.
+  - name: Name of the user to remove.
+
+  ## Examples
+
+      iex> users = [%Library.User{name: "Alice", id: "1", borrowed_books: []}, %Library.User{name: "Kevin", id: "2", borrowed_books: []}]
+      iex> Library.remove_user(users, "Kevin")
+      [%Library.User{name: "Alice", id: "1", borrowed_books: []}]
+  """
+  def remove_user(users, name) do
+    users |> Enum.reject(&(&1.name == name))
+  end
+
+  @doc """
   Allows a user to borrow a book from the library.
 
   ## Parameters
@@ -149,6 +166,23 @@ defmodule Library do
   """
   def list_books(library) do
     library
+  end
+
+  @doc """
+  Find a book by isbn.
+
+  ## Parameters
+  - library: The current list of books in the library.
+  - isbn: isbn of the book to find.
+
+  ## Examples
+
+      iex> library = [%Library.Book{title: "Elixir in Action", author: "Saša Jurić", isbn: "1234567890"}]
+      iex> Library.find_book_by_isbn(library, "1234567890")
+      [%Library.Book{title: "Elixir in Action", author: "Saša Jurić", isbn: "1234567890"}]
+  """
+  def find_book_by_isbn(library, isbn) do
+    Enum.find(library, &(&1.isbn == isbn))
   end
 
   @doc """
